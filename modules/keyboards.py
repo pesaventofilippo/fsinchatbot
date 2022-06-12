@@ -8,12 +8,14 @@ def tryInline():
 
 
 def pressF(count: int=0):
-    if count == 0:
-        txt = "Press F"
-    elif count == 1:
-        txt = "1 F in Chat"
-    else:
-        txt = f"{count} F's"
+    txt = "Press F" if count == 0 else "1 F in Chat" if count == 1 else f"{count} F's"
     return InlineKeyboardMarkup(inline_keyboard=[[
         InlineKeyboardButton(text=txt, callback_data=f"pressf#{count}")
+    ]])
+
+
+def oneClick(count: int=0):
+    txt = "Click" if count == 0 else "One click" if count == 1 else f"{count} clicks"
+    return InlineKeyboardMarkup(inline_keyboard=[[
+        InlineKeyboardButton(text=txt, callback_data=f"oneclick#{count}")
     ]])
