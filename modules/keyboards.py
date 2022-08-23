@@ -10,12 +10,12 @@ def tryInline():
 def pressF(count: int=0):
     txt = "Press F" if count == 0 else "1 F in Chat" if count == 1 else f"{count} F's"
     return InlineKeyboardMarkup(inline_keyboard=[[
-        InlineKeyboardButton(text=txt, callback_data=f"pressf#{count}")
+        InlineKeyboardButton(text=txt, callback_data="pressf")
     ]])
 
 
 def oneClick(count: int=0):
     txt = "Click" if count == 0 else "One click" if count == 1 else f"{count} clicks"
     return InlineKeyboardMarkup(inline_keyboard=[[
-        InlineKeyboardButton(text=txt, callback_data=f"oneclick#{count}")
+        InlineKeyboardButton(text=txt, callback_data="oneclick")
     ]])
