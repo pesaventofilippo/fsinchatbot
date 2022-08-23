@@ -3,7 +3,7 @@ from telepotpro.namedtuple import InlineQueryResultArticle, InputTextMessageCont
 from time import sleep
 from json import load as jsload
 from os.path import abspath, dirname, join
-from pony.orm import db_session, select
+from pony.orm import db_session
 from modules import keyboards
 from modules.database import Counter
 
@@ -37,10 +37,10 @@ def button(msg):
         counter.count = prev_count
     counter.count += 1
 
-    if button == "pressf":
+    if text == "pressf":
         bot.answerCallbackQuery(queryId, "F added.")
         bot.editMessageReplyMarkup(msgId, keyboards.pressF(counter.count))
-    elif button == "oneclick":
+    elif text == "oneclick":
         bot.answerCallbackQuery(queryId, "Click added.")
         bot.editMessageReplyMarkup(msgId, keyboards.oneClick(counter.count))
 
