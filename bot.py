@@ -42,14 +42,16 @@ def button(msg):
         bot.editMessageReplyMarkup(msgId, keyboards.pressF(counter.count))
     elif text == "oneclick":
         bot.answerCallbackQuery(queryId, "Click added.")
-        bot.editMessageReplyMarkup(msgId, keyboards.oneClick(counter.count))
+        desc = msg['message']['text'].split(" ", 1)[1]
+        bot.editMessageText(msgId, f"<b>{counter.count}</b> {desc}",
+                            parse_mode="HTML", reply_markup=keyboards.oneClick(desc))
 
 
 def query(msg):
     queryId, chatId, queryString = glance(msg, flavor="inline_query")
 
     pressF_desc = queryString if queryString else "to pay respect."
-    oneClick_desc = queryString if queryString else "1 like"
+    oneClick_desc = queryString if queryString else "like"
 
     results = [
         InlineQueryResultArticle(
@@ -67,10 +69,10 @@ def query(msg):
             id=f"oneclick_{queryString}",
             title="1 click =",
             input_message_content=InputTextMessageContent(
-                message_text=f"<b>1 Click =</b> {oneClick_desc}",
+                message_text=f"<b>0</b> {oneClick_desc}",
                 parse_mode="HTML"
             ),
-            reply_markup=keyboards.oneClick(),
+            reply_markup=keyboards.oneClick(oneClick_desc),
             description=oneClick_desc,
             thumb_url="https://i.imgur.com/Nc7b9Yx.png"
         )
