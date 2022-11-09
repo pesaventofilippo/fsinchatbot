@@ -14,7 +14,8 @@ def pressF(count: int=0):
     ]])
 
 
-def oneClick(desc: str):
+def oneClick(count: int=0):
+    txt = "Click" if count == 0 else "One click" if count == 1 else f"{count} clicks"
     return InlineKeyboardMarkup(inline_keyboard=[[
-        InlineKeyboardButton(text=desc, callback_data="oneclick")
+        InlineKeyboardButton(text=txt, callback_data="oneclick")
     ]])
