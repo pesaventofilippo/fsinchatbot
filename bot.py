@@ -1,4 +1,4 @@
-from telepotpro import Bot, glance
+from telepotpro import Bot, glance, api as tgapi
 from telepotpro.namedtuple import InlineQueryResultArticle, InputTextMessageContent
 from time import sleep
 from json import load as jsload
@@ -7,9 +7,10 @@ from pony.orm import db_session
 from modules import keyboards
 from modules.database import Counter
 
-
 with open(join(dirname(abspath(__file__)), "settings.json")) as settings_file:
     js_settings = jsload(settings_file)
+    if js_settings.get("api_server"):
+        tgapi.set_api_url(js_settings["api_server"])
 
 bot = Bot(js_settings["token"])
 
@@ -78,7 +79,6 @@ def query(msg):
     bot.answerInlineQuery(queryId, results, cache_time=3600, is_personal=False)
 
 
-bot.message_loop(callback={'chat': reply, 'callback_query': button, 'inline_query': query})
-
+bot.message_loop({'chat': reply, 'callback_query': button, 'inline_query': query})
 while True:
     sleep(60)
