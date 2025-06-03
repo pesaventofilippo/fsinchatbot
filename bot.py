@@ -1,17 +1,17 @@
-from telepotpro import Bot, glance, api as tgapi
-from telepotpro.namedtuple import InlineQueryResultArticle, InputTextMessageContent
-from time import sleep
-from json import load as jsload
-from os.path import abspath, dirname, join
 from pony.orm import db_session
+from json import load as jsload
+from flask import Flask, request
+from telepotpro import Bot, glance
+from telepotpro.loop import OrderedWebhook
+from os.path import abspath, dirname, join
+from telepotpro.namedtuple import InlineQueryResultArticle, InputTextMessageContent
 from modules import keyboards
 from modules.database import Counter
 
 with open(join(dirname(abspath(__file__)), "settings.json")) as settings_file:
     js_settings = jsload(settings_file)
-    if js_settings.get("api_server"):
-        tgapi.set_api_url(js_settings["api_server"])
 
+app = Flask(__name__)
 bot = Bot(js_settings["token"])
 
 
@@ -79,6 +79,14 @@ def query(msg):
     bot.answerInlineQuery(queryId, results, cache_time=3600, is_personal=False)
 
 
-bot.message_loop({'chat': reply, 'callback_query': button, 'inline_query': query})
-while True:
-    sleep(60)
+webhook = OrderedWebhook(bot, {'chat': reply, 'callback_query': button, 'inline_query': query})
+@app.route('/', methods=['GET', 'POST'])
+def pass_update():
+    webhook.feed(request.data)
+    return 'ok', 200
+
+
+if __name__ == "__main__":
+    bot.setWebhook(js_settings["webhook_url"])
+    webhook.run_as_thread()
+    app.run("127.0.0.1", port=js_settings["web_port"], debug=False)
